@@ -1,0 +1,59 @@
+plugins {
+    id "org.springframework.boot" version "2.1.4.RELEASE"
+    id "com.palantir.docker" version "0.22.1"
+    id "io.freefair.lombok" version "4.0.1"
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'jacoco'
+apply plugin: 'com.palantir.docker'
+
+group = 'maqs'
+version = '1.0'
+def registry = 'docker.io'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    compile('com.fasterxml.jackson.core:jackson-databind')
+    compile('org.springframework.boot:spring-boot-starter')
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.springframework.boot:spring-boot-configuration-processor')
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+
+    compile('org.projectlombok:lombok:1.16.20')
+    compile('org.postgresql:postgresql')
+    compile('com.google.code.gson:gson:2.6.1')
+    compile('commons-lang:commons-lang:2.6')
+    
+    testCompile('org.assertj:assertj-core:3.4.1')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('com.h2database:h2:1.4.200')
+    testCompile('junit:junit:4.12')
+}
+
+bootJar {
+    baseName = "${project.name}"
+    version =  "${project.version}"
+}
+
+task unpack(type: Copy) {
+    dependsOn bootJar
+    from(zipTree(tasks.bootJar.outputs.files.singleFile))
+    into("build/dependency")
+}
+
+docker {
+    name "${registry}/${project.group}/${bootJar.baseName}"
+    copySpec.from(tasks.unpack.outputs).into("dependency")
+    buildArgs(['DEPENDENCY': "dependency"])
+    tag "${registry}", "${registry}/${project.group}/${bootJar.baseName}:${bootJar.version}"
+}
+

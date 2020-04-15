@@ -1,0 +1,11 @@
+INSERT INTO "timesheet" ("id", "username", "timesheet_date", "sent_date", "status", "approved_date", "approved_by", "rejected_date", "rejected_by", "rejected_reason", "exception_date", "exception_reason", "sent_from", "processed_date") VALUES
+('84e74346-8183-4103-95b8-be565628c6c8',	'user1@maqs.com',	'2018-11-22 00:00:00',	'2018-11-22 16:26:03.509',	25,	NULL,	NULL,	'2018-11-22 16:52:59.74',	'user1@maqs.com',	'Too many hours',	NULL,	NULL,	'user1@maqs.com',	NULL),
+('5827910d-5ce5-4afc-95d2-4864d5070202',	'user1@maqs.com',	'2018-11-22 00:00:00',	'2018-11-22 16:53:37.717',	25,	NULL,	NULL,	'2018-11-22 16:54:18.828',	'user1@maqs.com',	'Still too many',	NULL,	NULL,	'user1@maqs.com',	NULL),
+('c3ae7df1-30b6-48b1-8344-6be05d05dca7',	'user1@maqs.com',	'2018-11-22 00:00:00',	'2018-11-26 10:30:03.306',	25,	'2018-11-26 10:31:08.981',	'user1@maqs.com',	NULL,	NULL,	NULL,	NULL,	NULL,	'user1@maqs.com',	NULL),
+('0f7277aa-b759-4339-95f1-8677d21f66d5',	'user1@maqs.com',	'2018-11-22 00:00:00',	'2018-11-22 16:58:41.847',	25,	'2018-11-22 18:03:48.262',	'user1@maqs.com',	NULL,	NULL,	NULL,	NULL,	NULL,	'user1@maqs.com',	NULL),
+('474ba9a6-3300-4e4e-8555-a9a0848682f0',	'user1@maqs.com',	'2018-11-26 00:00:00',	'2018-11-26 12:48:29.987',	25,	'2018-11-26 12:52:20.109',	'user1@maqs.com',	NULL,	NULL,	NULL,	NULL,	NULL,	'user1@maqs.com',	NULL),
+('c5b4704d-65de-4d01-adee-be57f8020bd1',	'user1@maqs.com',	'2018-11-26 00:00:00',	'2018-11-26 12:43:28.524',	30,	NULL,	NULL,	'2018-11-26 12:46:43.8',	'user1@maqs.com',	'Please reduce the hours',	NULL,	NULL,	'user1@maqs.com',	NULL),
+('ae577eb6-f78d-4011-b092-1e9d39af3de8',	'user1@maqs.com',	'2018-11-26 00:00:00',	'2018-11-26 14:06:16.89',	30,	NULL,	NULL,	'2018-11-26 14:23:18.606',	'user1@maqs.com',	'Too expensive.',	NULL,	NULL,	'user1@maqs.com',	NULL),
+('28333ab4-0d6c-48a6-8604-dd617ce77f99',	'user1@maqs.com',	'2018-12-10 00:00:00',	'2018-12-10 17:17:59.034',	30,	NULL,	NULL,	'2018-12-10 17:19:00.743',	'user1@maqs.com',	'What do you care',	NULL,	NULL,	'user1@maqs.com',	NULL),
+('dbdfda20-274a-4402-94db-8e80c986ebcb',	'user1@maqs.com',	'2018-12-07 00:00:00',	'2018-12-07 11:35:21.137',	10,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+('2a1c94e5-96ca-4f14-8278-de42f914a2a1',	'user1@maqs.com',	'2018-12-10 00:00:00',	'2018-12-10 15:09:26.92',	10,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
