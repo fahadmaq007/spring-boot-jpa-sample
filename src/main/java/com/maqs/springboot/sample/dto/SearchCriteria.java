@@ -39,8 +39,18 @@ public class SearchCriteria {
 
     public static class Clause {
         String field;
-        Operation op;
+        Operation op = Operation.EQ;
         Object value;
+
+        public Clause(String field, Object value) {
+            this(field, Operation.EQ, value);
+        }
+
+        public Clause(String field, Operation op, Object value) {
+            setField(field);
+            setOp(op);
+            setValue(value);
+        }
 
         public String getField() {
             return field;

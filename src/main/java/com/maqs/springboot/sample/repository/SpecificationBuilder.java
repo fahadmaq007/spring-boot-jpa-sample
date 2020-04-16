@@ -43,9 +43,6 @@ public class SpecificationBuilder {
                                  SearchCriteria.Clause c) {
         String fieldName = c.getField();
         SearchCriteria.Operation op = c.getOp();
-        if (op == null) {
-            op = SearchCriteria.Operation.EQ;
-        }
         Object value = c.getValue();
         Path expression = root.get(fieldName);
 
