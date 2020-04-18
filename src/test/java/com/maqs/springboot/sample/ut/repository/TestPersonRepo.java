@@ -28,7 +28,7 @@ public class TestPersonRepo extends BaseIntegrationTest {
     public  void setUpDatabase() {
         if (! setupDone) {
             String file = "/persons.json";
-            log.debug("creating records of type: Person from file " );
+            log.debug("creating records of type: Person from file " + file);
             List<Person> list = readFile(file, Person.class);
             for (Person r: list) {
                 personRepository.saveAndFlush(r);
@@ -83,7 +83,7 @@ public class TestPersonRepo extends BaseIntegrationTest {
         Integer value = 30;
         SearchCriteria searchCriteria = new SearchCriteria();
         SearchCriteria.Filter age30 = new SearchCriteria.Filter(field, value);
-        searchCriteria.addClause(age30);
+        searchCriteria.addFilter(age30);
 
         Page<Person> page = personRepository.findAll(SpecificationBuilder.findBy(searchCriteria), pageable);
         Assertions.assertThat(page.hasContent()).isTrue();
@@ -100,7 +100,7 @@ public class TestPersonRepo extends BaseIntegrationTest {
         Integer value = 30;
         SearchCriteria searchCriteria = new SearchCriteria();
         SearchCriteria.Filter age30 = new SearchCriteria.Filter(field, value);
-        searchCriteria.addClause(age30);
+        searchCriteria.addFilter(age30);
 
         Page<Person> page = personRepository.findAll(SpecificationBuilder.findBy(searchCriteria), pageable);
         Assertions.assertThat(page.hasContent()).isTrue();

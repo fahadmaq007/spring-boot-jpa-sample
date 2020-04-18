@@ -13,13 +13,8 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.temporal.TemporalField;
-import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -33,16 +28,12 @@ public class PersonRepoIntegrationTest extends BaseIntegrationTest {
     @Before
     public  void setUpDatabase() {
         if (! setupDone) {
-            System.out.println("setUpDatabase");
-            List<Person> list = readFile("/persons.json", Person.class);
+            String file = "/persons.json";
+            log.debug("creating records of type: Person from file " + file);
+            List<Person> list = readFile(file, Person.class);
             for (Person r: list) {
-//                Integer age = r.getAge();
-//                LocalDate date = LocalDate.now().minusYears(age);
-//                long millis = date.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli();
-//                r.setDob(millis);
                 personRepository.saveAndFlush(r);
             }
-            System.out.println(Util.toJson(list));
             setupDone = true;
         }
     }
@@ -59,112 +50,112 @@ public class PersonRepoIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(page.getSort().isSorted()).isFalse();
     }
 
-//    @Test
-//    public void testTestModelList_SortedByStatusInAscendingOrder() {
-//        Pageable pageable = Util.getPageRequest("status", 0, 10);
-//        Page<Person> page = personRepository.findAll(pageable);
-//        Assertions.assertThat(page.hasContent()).isTrue();
-//        Assertions.assertThat(page.isFirst()).isTrue();
-//        Assertions.assertThat(page.getSort().isSorted()).isTrue();
-//        List<Person> list = page.getContent();
-//        Assertions.assertThat(Util.isInOrder("status", list, true)).isTrue();
-//    }
-//
-//    @Test
-//    public void testTestModelList_SortedByStatusInDescendingOrder() {
-//        Pageable pageable = Util.getPageRequest("-status", 0, 10);
-//        Page<Person> page = personRepository.findAll(pageable);
-//        Assertions.assertThat(page.hasContent()).isTrue();
-//        Assertions.assertThat(page.isFirst()).isTrue();
-//        Assertions.assertThat(page.getSort().isSorted()).isTrue();
-//        List<Person> list = page.getContent();
-//        Assertions.assertThat(Util.isInOrder("status", list, false)).isTrue();
-//    }
-//
-//    @Test
-//    public void testTestModelList_whereStatusIs30() {
-//        SearchCriteria criteria = new SearchCriteria();
-//        SearchCriteria.Filter statusFilter = new SearchCriteria.Filter("status", 30);
-//        criteria.addClause(statusFilter);
-//        Pageable pageable = Pageable.unpaged();
-//        Specification<Person> spec = SpecificationBuilder.findBy(criteria);
-//        Page<Person> page = personRepository.findAll(spec, pageable);
-//
-//        Assertions.assertThat(page.hasContent()).isTrue();
-//        Assertions.assertThat(page.isFirst()).isTrue();
-//        Assertions.assertThat(page.getSort().isSorted()).isFalse();
-//        List<Person> list = page.getContent();
-//
-//        Assertions.assertThat(Util.hasOnlyGivenCriteria("status", 30, list)).isTrue();
-//    }
-//
-//    @Test
-//    public void testTestModelList_whereStatusIsGreaterThan30_noContent() {
-//        SearchCriteria criteria = new SearchCriteria();
-//        SearchCriteria.Filter statusFilter = new SearchCriteria.Filter("status", SearchCriteria.Operation.GT, 30);
-//        criteria.addClause(statusFilter);
-//        Pageable pageable = Pageable.unpaged();
-//        Specification<Person> spec = SpecificationBuilder.findBy(criteria);
-//        Page<Person> page = personRepository.findAll(spec, pageable);
-//
-//        Assertions.assertThat(page.hasContent()).isFalse();
-//        Assertions.assertThat(page.isFirst()).isTrue();
-//        Assertions.assertThat(page.getSort().isSorted()).isFalse();
-//    }
-//
-//    @Test
-//    public void testTestModelList_whereStatusIsLessThan30_hasContent() {
-//        SearchCriteria criteria = new SearchCriteria();
-//        SearchCriteria.Filter statusFilter = new SearchCriteria.Filter("status", SearchCriteria.Operation.LT, 30);
-//        criteria.addClause(statusFilter);
-//        Pageable pageable = Pageable.unpaged();
-//        Specification<Person> spec = SpecificationBuilder.findBy(criteria);
-//        Page<Person> page = personRepository.findAll(spec, pageable);
-//
-//        Assertions.assertThat(page.hasContent()).isTrue();
-//        Assertions.assertThat(page.isFirst()).isTrue();
-//        Assertions.assertThat(page.getSort().isSorted()).isFalse();
-//    }
-//
-//    @Test
-//    public void testTestModelList_whereStatusIs30AndtimesheetDateBetweenSomeRange_hasContent() {
-//        SearchCriteria criteria = new SearchCriteria();
-//        SearchCriteria.Filter statusFilter = new SearchCriteria.Filter("status", SearchCriteria.Operation.LT, 30);
-//        criteria.addClause(statusFilter);
-//
-//        SearchCriteria.Filter dateFilter = new SearchCriteria.Filter("timesheetDate", SearchCriteria.Operation.BTW,
-//                new Date[] { new Date(1541611400000l), new Date(1544639400000l)});
-//        criteria.addClause(dateFilter);
-//
-//        Pageable pageable = Pageable.unpaged();
-//        Specification<Person> spec = SpecificationBuilder.findBy(criteria);
-//        Page<Person> page = personRepository.findAll(spec, pageable);
-//
-//        Assertions.assertThat(page.hasContent()).isTrue();
-//        Assertions.assertThat(page.isFirst()).isTrue();
-//        Assertions.assertThat(page.getSort().isSorted()).isFalse();
-//    }
-//
-//    @Test
-//    public void testTestModelList_whereStatusIs30AndtimesheetDateBetweenSomeRange_sortedByStatus() {
-//        SearchCriteria criteria = new SearchCriteria();
-//        SearchCriteria.Filter statusFilter = new SearchCriteria.Filter("status", 30);
-//        criteria.addClause(statusFilter);
-//
-//        SearchCriteria.Filter dateFilter = new SearchCriteria.Filter("timesheetDate", SearchCriteria.Operation.BTW,
-//                new Date[] { new Date(1511639400000l), new Date(1545639400000l)});
-//        criteria.addClause(dateFilter);
-//
-//        Pageable pageable = Util.getPageRequest("status", 0, 10);
-//        Specification<Person> spec = SpecificationBuilder.findBy(criteria);
-//        Page<Person> page = personRepository.findAll(spec, pageable);
-//
-//        Assertions.assertThat(page.hasContent()).isTrue();
-//        Assertions.assertThat(page.isFirst()).isTrue();
-//        Assertions.assertThat(page.getSort().isSorted()).isTrue();
-//
-//        List<Person> list = page.getContent();
-//        Assertions.assertThat(Util.hasOnlyGivenCriteria("status", 30, list)).isTrue();
-//        Assertions.assertThat(Util.isInOrder("status", list, true)).isTrue();
-//    }
+    @Test
+    public void testTestModelList_SortedByAgeInAscendingOrder() {
+        Pageable pageable = Util.getPageRequest("age", 0, 10);
+        Page<Person> page = personRepository.findAll(pageable);
+        Assertions.assertThat(page.hasContent()).isTrue();
+        Assertions.assertThat(page.isFirst()).isTrue();
+        Assertions.assertThat(page.getSort().isSorted()).isTrue();
+        List<Person> list = page.getContent();
+        Assertions.assertThat(Util.isInOrder("age", list, true)).isTrue();
+    }
+
+    @Test
+    public void testTestModelList_SortedByAgeInDescendingOrder() {
+        Pageable pageable = Util.getPageRequest("-age", 0, 10);
+        Page<Person> page = personRepository.findAll(pageable);
+        Assertions.assertThat(page.hasContent()).isTrue();
+        Assertions.assertThat(page.isFirst()).isTrue();
+        Assertions.assertThat(page.getSort().isSorted()).isTrue();
+        List<Person> list = page.getContent();
+        Assertions.assertThat(Util.isInOrder("age", list, false)).isTrue();
+    }
+
+    @Test
+    public void testTestModelList_whereAgeIs30() {
+        SearchCriteria criteria = new SearchCriteria();
+        SearchCriteria.Filter ageFilter = new SearchCriteria.Filter("age", 30);
+        criteria.addFilter(ageFilter);
+        Pageable pageable = Pageable.unpaged();
+        Specification<Person> spec = SpecificationBuilder.findBy(criteria);
+        Page<Person> page = personRepository.findAll(spec, pageable);
+
+        Assertions.assertThat(page.hasContent()).isTrue();
+        Assertions.assertThat(page.isFirst()).isTrue();
+        Assertions.assertThat(page.getSort().isSorted()).isFalse();
+        List<Person> list = page.getContent();
+
+        Assertions.assertThat(Util.hasOnlyGivenCriteria("age", 30, list)).isTrue();
+    }
+
+    @Test
+    public void testTestModelList_whereAgeIsGreaterThan100_noContent() {
+        SearchCriteria criteria = new SearchCriteria();
+        SearchCriteria.Filter ageFilter = new SearchCriteria.Filter("age", SearchCriteria.Operation.GT, 100);
+        criteria.addFilter(ageFilter);
+        Pageable pageable = Pageable.unpaged();
+        Specification<Person> spec = SpecificationBuilder.findBy(criteria);
+        Page<Person> page = personRepository.findAll(spec, pageable);
+
+        Assertions.assertThat(page.hasContent()).isFalse();
+        Assertions.assertThat(page.isFirst()).isTrue();
+        Assertions.assertThat(page.getSort().isSorted()).isFalse();
+    }
+
+    @Test
+    public void testTestModelList_whereAgeIsLessThan50_hasContent() {
+        SearchCriteria criteria = new SearchCriteria();
+        SearchCriteria.Filter ageFilter = new SearchCriteria.Filter("age", SearchCriteria.Operation.LT, 50);
+        criteria.addFilter(ageFilter);
+        Pageable pageable = Pageable.unpaged();
+        Specification<Person> spec = SpecificationBuilder.findBy(criteria);
+        Page<Person> page = personRepository.findAll(spec, pageable);
+
+        Assertions.assertThat(page.hasContent()).isTrue();
+        Assertions.assertThat(page.isFirst()).isTrue();
+        Assertions.assertThat(page.getSort().isSorted()).isFalse();
+    }
+
+    @Test
+    public void testTestModelList_whereAgeIs50AndDobBetweenSomeRange_hasContent() {
+        SearchCriteria criteria = new SearchCriteria();
+        SearchCriteria.Filter ageFilter = new SearchCriteria.Filter("age", SearchCriteria.Operation.LT, 50);
+        criteria.addFilter(ageFilter);
+
+        SearchCriteria.Filter dateFilter = new SearchCriteria.Filter("dob", SearchCriteria.Operation.BTW,
+                new Long[] { 829725600000l, 829785600000l});
+        criteria.addFilter(dateFilter);
+
+        Pageable pageable = Pageable.unpaged();
+        Specification<Person> spec = SpecificationBuilder.findBy(criteria);
+        Page<Person> page = personRepository.findAll(spec, pageable);
+
+        Assertions.assertThat(page.hasContent()).isTrue();
+        Assertions.assertThat(page.isFirst()).isTrue();
+        Assertions.assertThat(page.getSort().isSorted()).isFalse();
+    }
+
+    @Test
+    public void testTestModelList_whereAgeIsGreaterThan30AndDobBetweenSomeRange_sortedByAge() {
+        SearchCriteria criteria = new SearchCriteria();
+        SearchCriteria.Filter ageFilter = new SearchCriteria.Filter("age",30);
+        criteria.addFilter(ageFilter);
+
+        SearchCriteria.Filter dateFilter = new SearchCriteria.Filter("dob", SearchCriteria.Operation.BTW,
+                new Long[] { 829725600000l, 829785600000l});
+        criteria.addFilter(dateFilter);
+
+        Pageable pageable = Util.getPageRequest("age", 0, 10);
+        Specification<Person> spec = SpecificationBuilder.findBy(criteria);
+        Page<Person> page = personRepository.findAll(spec, pageable);
+
+        Assertions.assertThat(page.hasContent()).isTrue();
+        Assertions.assertThat(page.isFirst()).isTrue();
+        Assertions.assertThat(page.getSort().isSorted()).isTrue();
+
+        List<Person> list = page.getContent();
+        Assertions.assertThat(Util.hasOnlyGivenCriteria("age", 30, list)).isTrue();
+        Assertions.assertThat(Util.isInOrder("age", list, true)).isTrue();
+    }
 }

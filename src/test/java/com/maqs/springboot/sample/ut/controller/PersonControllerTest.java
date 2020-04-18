@@ -4,6 +4,7 @@ import com.maqs.springboot.sample.BaseTest;
 import com.maqs.springboot.sample.dto.SearchCriteria;
 import com.maqs.springboot.sample.model.Person;
 import com.maqs.springboot.sample.services.PersonService;
+import com.maqs.springboot.sample.util.Util;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +32,7 @@ public class PersonControllerTest extends BaseTest {
     private PersonService personService;
 
     @Test
-    public void test() throws Exception {
+    public void testListPersons_postCriteria() throws Exception {
         Page<Person> expectedPage = Page.empty();
         Mockito.when(
                 personService.list(any(SearchCriteria.class), anyString(), anyInt(), anyInt()))

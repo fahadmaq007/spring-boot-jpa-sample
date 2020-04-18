@@ -9,7 +9,6 @@ import com.maqs.springboot.sample.util.Util;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -85,7 +84,7 @@ public class PersonService implements IPersonService {
                 }
             }
 
-            criteria.addClause(new SearchCriteria.Filter(field, op, value));
+            criteria.addFilter(new SearchCriteria.Filter(field, op, value));
         }
         return list(criteria, sort, pageIndex, pageSize);
     }

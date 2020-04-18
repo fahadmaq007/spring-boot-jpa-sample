@@ -26,7 +26,7 @@ public class SearchCriteria {
         this.filters = filters;
     }
 
-    public void addClause(Filter c) {
+    public void addFilter(Filter c) {
         if (this.filters == null) {
             this.filters = new ArrayList<>();
         }
