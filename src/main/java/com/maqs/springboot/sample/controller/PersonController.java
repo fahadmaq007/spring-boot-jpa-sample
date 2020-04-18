@@ -54,7 +54,7 @@ public class PersonController {
             @RequestParam(value="page", required = false) Integer page,
           @RequestParam(value="size", required = false) Integer size,
           @RequestParam(value="sort", required = false) String sort,
-          @RequestParam(value="filters", required = false) String criteria) throws Exception {
+          @RequestParam(value="criteria", required = false) String criteria) throws Exception {
         Page<Person> ePage = personService.list(criteria, sort, page, size);
         return new ResponseEntity<>(ePage, HttpStatus.OK);
     }
