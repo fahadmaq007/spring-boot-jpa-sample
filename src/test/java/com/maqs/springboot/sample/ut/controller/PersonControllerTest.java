@@ -42,7 +42,8 @@ public class PersonControllerTest extends BaseTest {
                 .accept(JSON))
                 .andReturn();
 
-        Mockito.verify(personService).list(null, null, null, null);
+        SearchCriteria s = null;
+        Mockito.verify(personService).list(s, null, null, null);
         Assertions.assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
     }
 }

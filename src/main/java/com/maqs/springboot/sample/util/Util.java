@@ -65,13 +65,13 @@ public class Util {
     }
 
     /**
-     * Compare the order of listByFilters is by given field in both lists.
+     * Compare the order of list is by given field in both lists.
      *
      * @param field Field to look for
-     * @param l1 First listByFilters
-     * @param l2 Second listByFilters
+     * @param l1 First list
+     * @param l2 Second list
      * @param <T> Any entity that has a declared 'field' param.
-     * @return true if all the elements match the both listByFilters otherwise false.
+     * @return true if all the elements match the both list otherwise false.
      */
     public static <T> boolean compare(String field, List<T> l1, List<T> l2) {
         if (l1.size() != l2.size()) {
@@ -100,7 +100,7 @@ public class Util {
     }
 
     /**
-     * Traverses the listByFilters to see the given order is maintained.
+     * Traverses the list to see the given order is maintained.
      *
      * @param field Field to look for
      * @param list List of entities
@@ -141,7 +141,7 @@ public class Util {
     }
 
     /**
-     * Traverses the listByFilters to see whether the given field has only given value in it.
+     * Traverses the list to see whether the given field has only given value in it.
      * For eg. status field having value 10: If the status has other than 10, it returns false.
      *
      * @param field Field to look for
@@ -149,7 +149,7 @@ public class Util {
      * @param list List of entities
      * @param <T> Any entity that has a declared 'field' param.
      *
-     * @return true if the listByFilters has only the given criteria, otherwise false.
+     * @return true if the list has only the given criteria, otherwise false.
      */
     public static <T> boolean hasOnlyGivenCriteria(String field, Object value, List<T> list) {
         if (list == null || list.isEmpty()) {

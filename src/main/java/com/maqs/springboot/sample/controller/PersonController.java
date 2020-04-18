@@ -43,17 +43,19 @@ public class PersonController {
         return new ResponseEntity<>(ePage, HttpStatus.OK);
     }
 
-    private ObjectMapper objectMapper = new ObjectMapper();
-
     @GetMapping
-    public ResponseEntity<Page<Person>> list(
+    public ResponseEntity<Page<Person>> listByQueryParams(@RequestParam Map<String, String> params) throws Exception {
+        Page<Person> ePage = personService.listByQueryParams(params);
+        return new ResponseEntity<>(ePage, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/json")
+    public ResponseEntity<Page<Person>> listByCriteriaAsJson(
             @RequestParam(value="page", required = false) Integer page,
-            @RequestParam(value="size", required = false) Integer size,
-            @RequestParam(value="sort", required = false) String sort,
-            @RequestParam Map<String, String> filters) throws Exception {
-        log.debug("page " + page + " sort: " + sort);
-        log.debug("filters " + filters + " json ");
-        Page<Person> ePage = personService.listByFilters(filters, sort, page, size);
+          @RequestParam(value="size", required = false) Integer size,
+          @RequestParam(value="sort", required = false) String sort,
+          @RequestParam(value="filters", required = false) String criteria) throws Exception {
+        Page<Person> ePage = personService.list(criteria, sort, page, size);
         return new ResponseEntity<>(ePage, HttpStatus.OK);
     }
 }
