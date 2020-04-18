@@ -1,52 +1,65 @@
 package com.maqs.springboot.sample.dto;
 
+import org.postgresql.util.GT;
+
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The Search Criteria DTO, encapsulates the list of {@link Filter}, can have one or more filters.
+ *
+ * @author maqbool
+ */
 public class SearchCriteria {
 
-    private List<Clause> clauses;
+    private List<Filter> filters;
 
     public SearchCriteria() {
 
     }
 
-    public SearchCriteria(List<Clause> clauses) {
-        this.clauses = clauses;
+    public SearchCriteria(List<Filter> filters) {
+        this.filters = filters;
     }
 
-    public void setClauses(List<Clause> clauses) {
-        this.clauses = clauses;
+    public void setFilters(List<Filter> filters) {
+        this.filters = filters;
     }
 
-    public void addClause(Clause c) {
-        if (this.clauses == null) {
-            this.clauses = new ArrayList<>();
+    public void addClause(Filter c) {
+        if (this.filters == null) {
+            this.filters = new ArrayList<>();
         }
-        this.clauses.add(c);
+        this.filters.add(c);
     }
 
-    public List<Clause> getClauses() {
-        return clauses;
+    public List<Filter> getFilters() {
+        return filters;
     }
 
     @Override
     public String toString() {
         return "SearchCriteria{" +
-                "clauses=" + clauses +
+                "filters=" + filters +
                 '}';
     }
 
-    public static class Clause {
+    /**
+     * Use this class to define the filter criteria.
+     * For eg. {"field": "age", "op": "GT", "value":30}
+     */
+    public static class Filter {
         String field;
         Operation op = Operation.EQ;
         Object value;
 
-        public Clause(String field, Object value) {
+        public Filter() { }
+
+        public Filter(String field, Object value) {
             this(field, Operation.EQ, value);
         }
 
-        public Clause(String field, Operation op, Object value) {
+        public Filter(String field, Operation op, Object value) {
             setField(field);
             setOp(op);
             setValue(value);
@@ -78,7 +91,7 @@ public class SearchCriteria {
 
         @Override
         public String toString() {
-            return "Clause{" +
+            return "Filter{" +
                     "field='" + field + '\'' +
                     ", op=" + op +
                     ", value=" + value +
@@ -87,13 +100,36 @@ public class SearchCriteria {
     }
 
 
+    /**
+     * The self explanatory Operations
+     */
     public enum Operation {
+        /**
+         * equalTo & notEqualTo
+         */
         EQ, NE,
 
-        LIKE,
+        /**
+         * Like / Contains text & startsWith text
+         */
+        LIKE, STARTS_WITH,
 
+        /**
+         * LessThan, GreaterThan, LessThanOrEqualTo & GreaterThanOrEqualTo
+         */
         LT, GT, LTE, GTE,
 
+        /**
+         * Between range.
+         * For eg. { "field": "dob", "op": "BTW", "value": [1544725100000, 1544725900000 ]}
+         * Fetch records between a range of two dates. The date can be a String ("2020-03-03"),
+         * a Long (timeInMillis) or an instance of {@link java.util.Date} itself.
+         *
+         * The range can also be a normal on usual Strings or Numbers.
+         * For eg.
+         * { "field": "age", "op": "BTW", "value": [15, 25 ]} - Age between 15 to 25
+         * { "field": "name", "op": "BTW", "value": ["a", "f" ]} - Name between 'a' & 'f'
+         */
         BTW
     }
 }

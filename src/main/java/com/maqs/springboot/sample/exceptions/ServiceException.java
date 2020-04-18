@@ -1,6 +1,11 @@
 package com.maqs.springboot.sample.exceptions;
 
-public class ServiceException extends RuntimeException {
+/**
+ * The service layer exceptions.
+ *
+ * @author maqbool
+ */
+public class ServiceException extends Exception {
     private static final long serialVersionUID = 1L;
 
     public ServiceException(String message) {

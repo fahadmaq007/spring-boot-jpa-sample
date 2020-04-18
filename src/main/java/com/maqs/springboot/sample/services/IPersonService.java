@@ -2,15 +2,17 @@ package com.maqs.springboot.sample.services;
 
 import com.maqs.springboot.sample.dto.SearchCriteria;
 import com.maqs.springboot.sample.exceptions.ServiceException;
-import com.maqs.springboot.sample.model.Timesheet;
+import com.maqs.springboot.sample.model.Person;
 import org.springframework.data.domain.Page;
 
+import java.util.Map;
+
 /**
- * Interface for timesheet API
+ * Interface for Person API
  *
  * @author maqbool
  */
-public interface ITimesheetService {
+public interface IPersonService {
 
     /**
      * List by given criteria
@@ -23,5 +25,7 @@ public interface ITimesheetService {
      * @return
      * @throws ServiceException
      */
-    Page<Timesheet> list(SearchCriteria searchCriteria, String sort, Integer pageIndex, Integer pageSize) throws ServiceException;
+    Page<Person> list(SearchCriteria searchCriteria, String sort, Integer pageIndex, Integer pageSize) throws ServiceException;
+
+    Page<Person> listByFilters(Map<String, String> filters, String sort, Integer pageIndex, Integer pageSize) throws ServiceException;
 }

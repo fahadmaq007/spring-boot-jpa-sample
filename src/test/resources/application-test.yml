@@ -1,12 +1,10 @@
-server:
-  port: 8881
 spring:
   datasource:
-    url: jdbc:postgresql://maqshost:5432/spring-jpa
-    username: postgres
-    password: postgres
+    url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1
+    username:
+    password:
     initialize: false
-    driver-class-name: org.postgresql.Driver
+    driver-class-name: org.h2.Driver
     hikari:
       minimumIdle: 5
       maximumPoolSize: 20
@@ -16,14 +14,11 @@ spring:
       connectionTimeout: 10000
   jpa:
     show-sql: true
-    database: postgresql
-    hibernate.ddl-auto: none
+    database: h2
+    hibernate.ddl-auto: 'create-drop'
     properties:
       hibernate:
-        jdbc:
-          lob:
-            non_contextual_creation: true
-        dialect: org.hibernate.dialect.PostgreSQL95Dialect
+        dialect: org.hibernate.dialect.H2Dialect
         id.new_generator_mappings: false
         format_sql: true
         enable_lazy_load_no_trans: true

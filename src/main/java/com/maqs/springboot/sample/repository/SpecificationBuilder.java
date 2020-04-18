@@ -10,26 +10,27 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * The JPA {@link Specification} builder according the given {@link SearchCriteria}
+ */
 @Slf4j
 public class SpecificationBuilder {
 
     public static <T> Specification<T> findBy(final SearchCriteria searchCriteria) {
-
         return new Specification<T>() {
-
             @Override
             public Predicate toPredicate(
                     Root<T> root,
                     CriteriaQuery<?> query, CriteriaBuilder builder) {
-
                 List<Predicate> predicates = new ArrayList<>();
-
-                List<SearchCriteria.Clause> clauseList = searchCriteria.getClauses();
-                if (clauseList != null) {
-                    for (SearchCriteria.Clause clause: clauseList) {
-                        Predicate p = buildPredicate(root, builder, clause);
-                        if (p != null) {
-                            predicates.add(p);
+                if (searchCriteria != null) {
+                    List<SearchCriteria.Filter> filterList = searchCriteria.getFilters();
+                    if (filterList != null) {
+                        for (SearchCriteria.Filter filter : filterList) {
+                            Predicate p = buildPredicate(root, builder, filter);
+                            if (p != null) {
+                                predicates.add(p);
+                            }
                         }
                     }
                 }
@@ -38,11 +39,22 @@ public class SpecificationBuilder {
         };
     }
 
+    /**
+     * Builds the {@link Predicate} for each of the {@link com.maqs.springboot.sample.dto.SearchCriteria.Filter}.
+     * @param root
+     * @param builder
+     * @param c
+     * @param <T>
+     * @return
+     */
     public static <T> Predicate buildPredicate(Root<T> root,
-                                 CriteriaBuilder builder,
-                                 SearchCriteria.Clause c) {
+                                               CriteriaBuilder builder,
+                                               SearchCriteria.Filter c) {
         String fieldName = c.getField();
         SearchCriteria.Operation op = c.getOp();
+        if (op == null) {
+            op = SearchCriteria.Operation.EQ;
+        }
         Object value = c.getValue();
         Path expression = root.get(fieldName);
 
@@ -53,6 +65,8 @@ public class SpecificationBuilder {
                 return builder.notEqual(expression, value);
             case LIKE:
                 return builder.like((Expression<String>) expression, "%" + value + "%");
+            case STARTS_WITH:
+                return builder.like((Expression<String>) expression, value + "%");
             case LT:
                 return builder.lessThan(expression, (Comparable) value);
             case GT:
@@ -77,6 +91,10 @@ public class SpecificationBuilder {
                 array = ((List)value).toArray();
             } else if (value instanceof Object[]) {
                 array = (Object[]) value;
+            } else {
+                throw new IllegalArgumentException(
+                        SearchCriteria.Operation.BTW + " expects a range with atleast two values as an Array or a List. " +
+                                "For eg. 'value': [20, 30]");
             }
             if (array.length >= 2) {
                 Y start;
@@ -96,14 +114,18 @@ public class SpecificationBuilder {
 
     private static <Y extends Comparable<? super Y>> Predicate createRangePredicate(
             CriteriaBuilder builder, Expression field, Object start, Object end ) {
-        log.debug("applied range predicate on field: " + field + " <" + start + ", " + end + ">");
+        log.debug("applied range predicate <start, end>: " + " <" + start + ", " + end + ">");
         if( start != null && end != null ) {
             return builder.between(field, (Y) start, (Y) end);
         } else if ( start != null ) {
             return builder.greaterThanOrEqualTo(field, (Y) start);
-        } else {
+        } else if ( end != null ) {
             return builder.lessThanOrEqualTo(field, (Y) end);
         }
+
+        log.error("No range predicate is created as the values are null");
+        return null;
     }
 
 }
+
