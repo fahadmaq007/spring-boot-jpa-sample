@@ -5,6 +5,7 @@ import com.maqs.springboot.sample.exceptions.ServiceException;
 import com.maqs.springboot.sample.model.Person;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,7 +26,7 @@ public interface IPersonService {
      * @return
      * @throws ServiceException
      */
-    Page<Person> list(SearchCriteria searchCriteria, String sort, Integer pageIndex, Integer pageSize) throws ServiceException;
+    Page<Person> listByCriteria(SearchCriteria searchCriteria, String sort, Integer pageIndex, Integer pageSize) throws ServiceException;
 
     /**
      * List by given query params.
@@ -49,6 +50,12 @@ public interface IPersonService {
      * @return
      * @throws ServiceException
      */
-    Page<Person> list(String criteriaJson, String sort, Integer pageIndex, Integer pageSize) throws ServiceException;
+    Page<Person> listByCriteriaAsJson(String criteriaJson, String sort, Integer pageIndex, Integer pageSize) throws ServiceException;
 
+    /**
+     * Create a listByCriteriaAsJson of persons.
+     * @param persons
+     * @return
+     */
+    boolean store(List<Person> persons) throws ServiceException;
 }

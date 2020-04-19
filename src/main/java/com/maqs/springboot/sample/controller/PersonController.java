@@ -1,6 +1,5 @@
 package com.maqs.springboot.sample.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.maqs.springboot.sample.dto.SearchCriteria;
 import com.maqs.springboot.sample.exceptions.ServiceException;
 import com.maqs.springboot.sample.model.Person;
@@ -13,11 +12,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/persons",
-        produces = MediaType.APPLICATION_JSON_VALUE)
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        consumes = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 public class PersonController {
 
@@ -25,7 +26,19 @@ public class PersonController {
     private IPersonService personService;
 
     /**
-     * The REST api to list the entities
+     * Store API
+     * @param persons
+     * @return
+     * @throws ServiceException
+     */
+    @PostMapping()
+    public ResponseEntity<Boolean> store(@RequestBody(required = true)List<Person> persons) throws ServiceException {
+        boolean stored = personService.store(persons);
+        return new ResponseEntity<Boolean>(stored, HttpStatus.OK);
+    }
+
+    /**
+     * The REST api to listByCriteriaAsJson the entities
      * @param page - Page Number
      * @param size - Page Size
      * @param sort - Sort by attribute (Use '-' for DESC order. For. eg. -age)
@@ -33,13 +46,13 @@ public class PersonController {
      * @return
      * @throws ServiceException
      */
-    @PostMapping()
-    public ResponseEntity<Page<Person>> list(
+    @PostMapping(value = "/json")
+    public ResponseEntity<Page<Person>> listByCriteria(
             @RequestParam(value="page", required = false) Integer page,
             @RequestParam(value="size", required = false) Integer size,
             @RequestParam(value="sort", required = false) String sort,
             @RequestBody(required = false) SearchCriteria searchCriteria) throws ServiceException {
-        Page<Person> ePage = personService.list(searchCriteria, sort, page, size);
+        Page<Person> ePage = personService.listByCriteria(searchCriteria, sort, page, size);
         return new ResponseEntity<>(ePage, HttpStatus.OK);
     }
 
@@ -55,7 +68,7 @@ public class PersonController {
           @RequestParam(value="size", required = false) Integer size,
           @RequestParam(value="sort", required = false) String sort,
           @RequestParam(value="criteria", required = false) String criteria) throws Exception {
-        Page<Person> ePage = personService.list(criteria, sort, page, size);
+        Page<Person> ePage = personService.listByCriteriaAsJson(criteria, sort, page, size);
         return new ResponseEntity<>(ePage, HttpStatus.OK);
     }
 }

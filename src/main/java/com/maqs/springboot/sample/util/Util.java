@@ -6,7 +6,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -197,5 +199,14 @@ public class Util {
     public static <T> T fromJson(String json, Class<T> clazz) {
         Gson gson = new Gson();
         return gson.fromJson(json, clazz);
+    }
+
+    public static String encode(String url) {
+        try {
+            String encodeURL = URLEncoder.encode( url, "UTF-8" );
+            return encodeURL;
+        } catch (UnsupportedEncodingException e) {
+            return "Issue while encoding" +e.getMessage();
+        }
     }
 }

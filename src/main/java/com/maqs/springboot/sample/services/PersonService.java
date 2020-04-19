@@ -15,9 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -35,7 +33,7 @@ public class PersonService implements IPersonService {
     }
 
     @Override
-    public Page<Person> list(SearchCriteria searchCriteria, String sort, Integer pageIndex, Integer pageSize) throws ServiceException {
+    public Page<Person> listByCriteria(SearchCriteria searchCriteria, String sort, Integer pageIndex, Integer pageSize) throws ServiceException {
         Pageable pageable = Util.getPageRequest(sort, pageIndex, pageSize);
         log.debug("listing timesheets ... " + searchCriteria);
 
@@ -74,7 +72,8 @@ public class PersonService implements IPersonService {
                     op = SearchCriteria.Operation.valueOf(o);
                 } catch (Exception e) {
                     throw new InvalidFilterOperationException(o
-                            + " is not available in " + SearchCriteria.Operation.values());
+                            + " is an invalid operation, the available ones are "
+                            + Arrays.asList(SearchCriteria.Operation.values()));
                 }
             } else {
                 op = SearchCriteria.Operation.EQ;
@@ -117,13 +116,23 @@ public class PersonService implements IPersonService {
                 size = Integer.valueOf(sSize);
             }
         }
-        return list(criteria, sort, page, size);
+        return listByCriteria(criteria, sort, page, size);
     }
 
     @Override
-    public Page<Person> list(String criteriaJson, String sort, Integer page, Integer size) throws ServiceException {
+    public Page<Person> listByCriteriaAsJson(String criteriaJson, String sort, Integer page, Integer size) throws ServiceException {
         SearchCriteria criteria = Util.fromJson(criteriaJson, SearchCriteria.class);
-        return list(criteria, sort, page, size);
+        return listByCriteria(criteria, sort, page, size);
+    }
+
+    @Override
+    public boolean store(List<Person> persons) throws ServiceException {
+        try {
+            personRepository.saveAll(persons);
+        } catch (Exception e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
+        return true;
     }
 
 }

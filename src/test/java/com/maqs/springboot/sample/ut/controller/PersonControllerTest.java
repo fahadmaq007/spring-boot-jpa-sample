@@ -4,7 +4,6 @@ import com.maqs.springboot.sample.BaseTest;
 import com.maqs.springboot.sample.dto.SearchCriteria;
 import com.maqs.springboot.sample.model.Person;
 import com.maqs.springboot.sample.services.PersonService;
-import com.maqs.springboot.sample.util.Util;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,15 +34,31 @@ public class PersonControllerTest extends BaseTest {
     public void testListPersons_postCriteria() throws Exception {
         Page<Person> expectedPage = Page.empty();
         Mockito.when(
-                personService.list(any(SearchCriteria.class), anyString(), anyInt(), anyInt()))
+                personService.listByCriteria(any(SearchCriteria.class), anyString(), anyInt(), anyInt()))
                 .thenReturn(expectedPage);
         MvcResult mvcResult = mockMvc.perform(
-                MockMvcRequestBuilders.post("/persons")
+                MockMvcRequestBuilders.post("/persons/json")
                 .accept(JSON))
                 .andReturn();
 
         SearchCriteria s = null;
-        Mockito.verify(personService).list(s, null, null, null);
+        Mockito.verify(personService).listByCriteria(s, null, null, null);
+        Assertions.assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
+    public void testListPersons_getCriteria() throws Exception {
+        Page<Person> expectedPage = Page.empty();
+        Mockito.when(
+                personService.listByCriteria(any(SearchCriteria.class), anyString(), anyInt(), anyInt()))
+                .thenReturn(expectedPage);
+        MvcResult mvcResult = mockMvc.perform(
+                MockMvcRequestBuilders.get("/persons/json")
+                        .accept(JSON))
+                .andReturn();
+
+        SearchCriteria s = null;
+        Mockito.verify(personService).listByCriteria(s, null, null, null);
         Assertions.assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
     }
 }
