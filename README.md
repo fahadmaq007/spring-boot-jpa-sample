@@ -49,6 +49,14 @@ It has a <code>com.maqs.springboot.sample.repository.SpecificationBuilder</code>
 
 For. eg. Create a search criteria on Person entity to filter by age who are less than 30. The JSON below would fetch the persons whose age is less than 30.
 
+<code>
+ SearchCriteria searchCriteria = new SearchCriteria();
+ SearchCriteria.Filter age30 = new SearchCriteria.Filter(field, SearchCriteria.Operation.LT, value);
+ searchCriteria.addFilter(age30);
+</code> 
+
+The above criteria is equivalent to the following JSON:
+
 <code>{"filters":[{"field":"age","op":"LT","value":30}]}</code>
 
 Add New Entity:
