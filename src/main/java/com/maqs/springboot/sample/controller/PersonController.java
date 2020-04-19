@@ -16,9 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/persons",
-        produces = MediaType.APPLICATION_JSON_VALUE,
-        consumes = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/persons", produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 public class PersonController {
 
@@ -31,7 +29,7 @@ public class PersonController {
      * @return
      * @throws ServiceException
      */
-    @PostMapping()
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Boolean> store(@RequestBody(required = true)List<Person> persons) throws ServiceException {
         boolean stored = personService.store(persons);
         return new ResponseEntity<Boolean>(stored, HttpStatus.OK);
@@ -46,7 +44,7 @@ public class PersonController {
      * @return
      * @throws ServiceException
      */
-    @PostMapping(value = "/json")
+    @PostMapping(value = "/json", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<Person>> listByCriteria(
             @RequestParam(value="page", required = false) Integer page,
             @RequestParam(value="size", required = false) Integer size,
