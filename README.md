@@ -53,7 +53,6 @@ For. eg. Create a search criteria on Person entity to filter by age who are less
  SearchCriteria searchCriteria = new SearchCriteria();
  
  SearchCriteria.Filter age30 = new SearchCriteria.Filter(field, SearchCriteria.Operation.LT, value);
- 
  searchCriteria.addFilter(age30);
 </code> 
 
