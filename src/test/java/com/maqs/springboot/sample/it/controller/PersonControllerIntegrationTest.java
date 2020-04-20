@@ -37,4 +37,15 @@ public class PersonControllerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
+    @Test
+    public void testListPersons_getByCriteriaAsJsonString() throws Exception {
+        String content = "{\"filters\":[{\"field\":\"age\",\"op\":\"EQ\",\"value\":30}]}";
+        MvcResult mvcResult = mockMvc.perform(
+                MockMvcRequestBuilders.get("/persons/json")
+                        .param("criteria", content)
+                        .accept(JSON))
+                .andReturn();
+
+        Assertions.assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
+    }
 }

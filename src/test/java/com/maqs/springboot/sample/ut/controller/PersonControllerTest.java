@@ -31,13 +31,13 @@ public class PersonControllerTest extends BaseTest {
     private PersonService personService;
 
     @Test
-    public void testListPersons_postCriteria() throws Exception {
+    public void testListPersons_postByCriteria() throws Exception {
         Page<Person> expectedPage = Page.empty();
         Mockito.when(
                 personService.listByCriteria(any(SearchCriteria.class), anyString(), anyInt(), anyInt()))
                 .thenReturn(expectedPage);
         MvcResult mvcResult = mockMvc.perform(
-                MockMvcRequestBuilders.post("/persons/json")
+                MockMvcRequestBuilders.post("/persons/json").contentType(JSON)
                 .accept(JSON))
                 .andReturn();
 
@@ -47,18 +47,18 @@ public class PersonControllerTest extends BaseTest {
     }
 
     @Test
-    public void testListPersons_getCriteria() throws Exception {
+    public void testListPersons_getByCriteriaAsJsonString() throws Exception {
         Page<Person> expectedPage = Page.empty();
         Mockito.when(
-                personService.listByCriteria(any(SearchCriteria.class), anyString(), anyInt(), anyInt()))
+                personService.listByCriteriaAsJson(anyString(), anyString(), anyInt(), anyInt()))
                 .thenReturn(expectedPage);
         MvcResult mvcResult = mockMvc.perform(
                 MockMvcRequestBuilders.get("/persons/json")
                         .accept(JSON))
                 .andReturn();
 
-        SearchCriteria s = null;
-        Mockito.verify(personService).listByCriteria(s, null, null, null);
+        String s = null;
+        Mockito.verify(personService).listByCriteriaAsJson(s, null, null, null);
         Assertions.assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
     }
 }
