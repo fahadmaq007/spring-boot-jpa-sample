@@ -92,7 +92,7 @@ public class PersonRepoIntegrationTest extends BaseIntegrationTest {
     @Test
     public void testTestModelList_whereAgeIsGreaterThan100_noContent() {
         SearchCriteria criteria = new SearchCriteria();
-        SearchCriteria.Filter ageFilter = new SearchCriteria.Filter("age", SearchCriteria.Operation.GT, 100);
+        SearchCriteria.Filter ageFilter = new SearchCriteria.Filter("age", SearchCriteria.Operation.gt, 100);
         criteria.addFilter(ageFilter);
         Pageable pageable = Pageable.unpaged();
         Specification<Person> spec = SpecificationBuilder.findBy(criteria);
@@ -106,7 +106,7 @@ public class PersonRepoIntegrationTest extends BaseIntegrationTest {
     @Test
     public void testTestModelList_whereAgeIsLessThan50_hasContent() {
         SearchCriteria criteria = new SearchCriteria();
-        SearchCriteria.Filter ageFilter = new SearchCriteria.Filter("age", SearchCriteria.Operation.LT, 50);
+        SearchCriteria.Filter ageFilter = new SearchCriteria.Filter("age", SearchCriteria.Operation.lt, 50);
         criteria.addFilter(ageFilter);
         Pageable pageable = Pageable.unpaged();
         Specification<Person> spec = SpecificationBuilder.findBy(criteria);
@@ -120,10 +120,10 @@ public class PersonRepoIntegrationTest extends BaseIntegrationTest {
     @Test
     public void testTestModelList_whereAgeIs50AndDobBetweenSomeRange_hasContent() {
         SearchCriteria criteria = new SearchCriteria();
-        SearchCriteria.Filter ageFilter = new SearchCriteria.Filter("age", SearchCriteria.Operation.LT, 50);
+        SearchCriteria.Filter ageFilter = new SearchCriteria.Filter("age", SearchCriteria.Operation.lt, 50);
         criteria.addFilter(ageFilter);
 
-        SearchCriteria.Filter dateFilter = new SearchCriteria.Filter("dob", SearchCriteria.Operation.BTW,
+        SearchCriteria.Filter dateFilter = new SearchCriteria.Filter("dob", SearchCriteria.Operation.btw,
                 new Long[] { 829725600000l, 829785600000l});
         criteria.addFilter(dateFilter);
 
@@ -142,7 +142,7 @@ public class PersonRepoIntegrationTest extends BaseIntegrationTest {
         SearchCriteria.Filter ageFilter = new SearchCriteria.Filter("age",30);
         criteria.addFilter(ageFilter);
 
-        SearchCriteria.Filter dateFilter = new SearchCriteria.Filter("dob", SearchCriteria.Operation.BTW,
+        SearchCriteria.Filter dateFilter = new SearchCriteria.Filter("dob", SearchCriteria.Operation.btw,
                 new Long[] { 829725600000l, 829785600000l});
         criteria.addFilter(dateFilter);
 

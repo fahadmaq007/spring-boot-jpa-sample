@@ -1,7 +1,5 @@
 package com.maqs.springboot.sample.dto;
 
-import org.postgresql.util.GT;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,17 +44,17 @@ public class SearchCriteria {
 
     /**
      * Use this class to define the filter criteria.
-     * For eg. {"field": "age", "op": "GT", "value":30}
+     * For eg. {"field": "age", "op": "gt", "value":30}
      */
     public static class Filter {
         String field;
-        Operation op = Operation.EQ;
+        Operation op = Operation.eq;
         Object value;
 
         public Filter() { }
 
         public Filter(String field, Object value) {
-            this(field, Operation.EQ, value);
+            this(field, Operation.eq, value);
         }
 
         public Filter(String field, Operation op, Object value) {
@@ -107,30 +105,33 @@ public class SearchCriteria {
         /**
          * equalTo & notEqualTo
          */
-        EQ, NE,
+        eq, ne,
 
         /**
-         * Like / Contains text & startsWith text
+         * Text operaions: Like / Contains text
          */
-        LIKE, STARTS_WITH,
+        cn, // Contains
+        like, // Like
+        sw, // startsWith
+        ew, // endsWith
 
         /**
          * LessThan, GreaterThan, LessThanOrEqualTo & GreaterThanOrEqualTo
          */
-        LT, GT, LTE, GTE,
+        lt, gt, le, ge,
 
         /**
          * Between range.
-         * For eg. { "field": "dob", "op": "BTW", "value": [1544725100000, 1544725900000 ]}
+         * For eg. { "field": "dob", "op": "btw", "value": [1544725100000, 1544725900000 ]}
          * Fetch records between a range of two dates. The date can be a String ("2020-03-03"),
          * a Long (timeInMillis) or an instance of {@link java.util.Date} itself.
          *
          * The range can also be a normal on usual Strings or Numbers.
          * For eg.
-         * { "field": "age", "op": "BTW", "value": [15, 25 ]} - Age between 15 to 25
-         * { "field": "name", "op": "BTW", "value": ["a", "f" ]} - Name between 'a' & 'f'
+         * { "field": "age", "op": "btw", "value": [15, 25 ]} - Age between 15 to 25
+         * { "field": "name", "op": "btw", "value": ["a", "f" ]} - Name between 'a' & 'f'
          */
-        BTW
+        btw
     }
 }
 

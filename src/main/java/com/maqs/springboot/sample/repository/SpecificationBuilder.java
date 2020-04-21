@@ -1,13 +1,13 @@
 package com.maqs.springboot.sample.repository;
 
 import com.maqs.springboot.sample.dto.SearchCriteria;
+import com.maqs.springboot.sample.exceptions.InvalidFilterOperationException;
 import com.maqs.springboot.sample.util.Util;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -53,29 +53,36 @@ public class SpecificationBuilder {
         String fieldName = c.getField();
         SearchCriteria.Operation op = c.getOp();
         if (op == null) {
-            op = SearchCriteria.Operation.EQ;
+            op = SearchCriteria.Operation.eq;
         }
         Object value = c.getValue();
         Path expression = root.get(fieldName);
-
+        Class<?> fieldClass = expression.getJavaType();
+        Object classValue = Util.getValue(value, fieldClass);
+        if (classValue != null) {
+            value = classValue;
+        }
         switch (op) {
-            case EQ:
+            case eq:
                 return builder.equal(expression, value);
-            case NE:
+            case ne:
                 return builder.notEqual(expression, value);
-            case LIKE:
+            case cn:
+            case like:
                 return builder.like((Expression<String>) expression, "%" + value + "%");
-            case STARTS_WITH:
+            case sw:
                 return builder.like((Expression<String>) expression, value + "%");
-            case LT:
+            case ew:
+                return builder.like((Expression<String>) expression, "%" + value);
+            case lt:
                 return builder.lessThan(expression, (Comparable) value);
-            case GT:
+            case gt:
                 return builder.greaterThan(expression, (Comparable) value);
-            case LTE:
+            case le:
                 return builder.lessThanOrEqualTo(expression, (Comparable) value);
-            case GTE:
+            case ge:
                 return builder.greaterThanOrEqualTo(expression, (Comparable) value);
-            case BTW:
+            case btw:
                 return createRangePredicate(builder, expression, value);
             default:
                 return null;
@@ -84,7 +91,6 @@ public class SpecificationBuilder {
 
     private static <Y extends Comparable<? super Y>> Predicate createRangePredicate(
             CriteriaBuilder builder, Expression field, Object value ) {
-        Class<?> fieldClass = field.getJavaType();
         if (value != null) {
             Object[] array = null;
             if (value instanceof List) {
@@ -92,22 +98,17 @@ public class SpecificationBuilder {
             } else if (value instanceof Object[]) {
                 array = (Object[]) value;
             } else {
-                throw new IllegalArgumentException(
-                        SearchCriteria.Operation.BTW + " expects a range with atleast two values as an Array or a List. " +
-                                "For eg. 'value': [20, 30]");
+                throw new InvalidFilterOperationException(SearchCriteria.Operation.btw + " expects a range with atleast two values as an Array or a List. For eg. 'value': [20, 30]");
             }
-            if (array.length >= 2) {
-                Y start;
-                Y end;
-                if (Date.class == fieldClass) {
-                    start = (Y) Util.parseDate(array[0]);
-                    end = (Y) Util.parseDate(array[1]);
-                } else {
-                    start = (Y) array[0];
+            Y start = null;
+            Y end = null;
+            if (array != null && array.length > 0) {
+                start= (Y) array[0];
+                if (array.length > 1) {
                     end = (Y) array[1];
                 }
-                return createRangePredicate(builder, field, start, end);
             }
+            return createRangePredicate(builder, field, start, end);
         }
         return null;
     }

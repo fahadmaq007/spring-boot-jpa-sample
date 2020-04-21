@@ -8,7 +8,6 @@ import com.maqs.springboot.sample.repository.PersonRepository;
 import com.maqs.springboot.sample.repository.SpecificationBuilder;
 import com.maqs.springboot.sample.util.Util;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,7 +34,7 @@ public class PersonService implements IPersonService {
     @Override
     public Page<Person> listByCriteria(SearchCriteria searchCriteria, String sort, Integer pageIndex, Integer pageSize) throws ServiceException {
         Pageable pageable = Util.getPageRequest(sort, pageIndex, pageSize);
-        log.debug("listing timesheets ... " + searchCriteria);
+        log.debug("listing timesheets ... " + searchCriteria + " by page " + pageable);
 
         Page<Person> page = null;
         try {
@@ -49,7 +48,6 @@ public class PersonService implements IPersonService {
         } catch (Exception e) {
             throw new ServiceException(e.getMessage(), e);
         }
-
         return page;
     }
 
@@ -60,13 +58,15 @@ public class PersonService implements IPersonService {
             if (pagingParams.contains(key)) { // ignore paging params
                 continue;
             }
-            String v = params.get(key);
+            String value = params.get(key);
             SearchCriteria.Operation op;
             String field = key;
-            Object value = v;
             if (key.contains(":")) {
                 int index = key.lastIndexOf(":");
                 field = key.substring(0, index);
+                if (! Util.isFieldDefined(Person.class, field) ) {
+                    continue;
+                }
                 String o = key.substring(index + 1).toUpperCase();
                 try {
                     op = SearchCriteria.Operation.valueOf(o);
@@ -76,28 +76,7 @@ public class PersonService implements IPersonService {
                             + Arrays.asList(SearchCriteria.Operation.values()));
                 }
             } else {
-                op = SearchCriteria.Operation.EQ;
-            }
-            if (op == SearchCriteria.Operation.BTW) {
-                if (v.contains(",")) {
-                    String[] strs = v.split(",");
-                    Object o1 = strs[0];
-                    Object o2 = null;
-                    if (StringUtils.isNumeric((String) o1)) {
-                        o1 = Long.valueOf((String) o1);
-                    }
-                    if (strs[1] != null && strs[1].length() > 0) {
-                        o2 = strs[1];
-                        if (StringUtils.isNumeric((String) o2)) {
-                            o2 = Long.valueOf((String) o2);
-                        }
-                    }
-                    value = new Object[] { o1, o2 };
-                }
-            } else {
-                if (StringUtils.isNumeric(v)) {
-                    value = Long.valueOf(v);
-                }
+                op = SearchCriteria.Operation.eq;
             }
 
             criteria.addFilter(new SearchCriteria.Filter(field, op, value));

@@ -16,7 +16,7 @@ public class PersonControllerIntegrationTest extends BaseIntegrationTest {
 
     @Test
     public void testListPersons_postCriteria() throws Exception {
-        String content = "{\"filters\":[{\"field\":\"age\",\"op\":\"EQ\",\"value\":30}]}";
+        String content = "{\"filters\":[{\"field\":\"age\",\"op\":\"eq\",\"value\":30}]}";
         MvcResult mvcResult = mockMvc.perform(
                 MockMvcRequestBuilders.post("/persons/json")
                         .contentType(JSON).content(content)
@@ -39,7 +39,7 @@ public class PersonControllerIntegrationTest extends BaseIntegrationTest {
 
     @Test
     public void testListPersons_getByCriteriaAsJsonString() throws Exception {
-        String content = "{\"filters\":[{\"field\":\"age\",\"op\":\"EQ\",\"value\":30}]}";
+        String content = "{\"filters\":[{\"field\":\"age\",\"op\":\"eq\",\"value\":30}]}";
         MvcResult mvcResult = mockMvc.perform(
                 MockMvcRequestBuilders.get("/persons/json")
                         .param("criteria", content)

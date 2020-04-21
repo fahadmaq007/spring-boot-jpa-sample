@@ -47,6 +47,21 @@ public class PersonControllerTest extends BaseTest {
     }
 
     @Test
+    public void testListPersons_getByQueryParams() throws Exception {
+        Page<Person> expectedPage = Page.empty();
+        Mockito.when(
+                personService.listByQueryParams(anyMap()))
+                .thenReturn(expectedPage);
+        MvcResult mvcResult = mockMvc.perform(
+                MockMvcRequestBuilders.get("/persons")
+                        .accept(JSON))
+                .andReturn();
+
+        Mockito.verify(personService).listByQueryParams(anyMap());
+        Assertions.assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
     public void testListPersons_getByCriteriaAsJsonString() throws Exception {
         Page<Person> expectedPage = Page.empty();
         Mockito.when(
