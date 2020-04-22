@@ -32,6 +32,44 @@ GET Method:
 3. <code>http://localhost:8881/persons?name:like=Dunlap</code>
 4. <code>http://localhost:8881/persons?dob:btw=millis1,millis2</code> # Time in Millis
 
+The following opertions are supported:
+
+<code>
+ public enum Operation {
+ 
+        /**
+         * equalTo & notEqualTo
+         */
+        eq, ne,
+
+        /**
+         * Text operaions: Like / Contains text
+         */
+        cn, // Contains
+        like, // Like
+        sw, // startsWith
+        ew, // endsWith
+
+        /**
+         * LessThan, GreaterThan, LessThanOrEqualTo & GreaterThanOrEqualTo
+         */
+        lt, gt, le, ge,
+
+        /**
+         * Between range.
+         * For eg. { "field": "dob", "op": "btw", "value": [1544725100000, 1544725900000 ]}
+         * Fetch records between a range of two dates. The date can be a String ("2020-03-03"),
+         * a Long (timeInMillis) or an instance of {@link java.util.Date} itself.
+         *
+         * The range can also be a normal on usual Strings or Numbers.
+         * For eg.
+         * { "field": "age", "op": "btw", "value": [15, 25 ]} - Age between 15 to 25
+         * { "field": "name", "op": "btw", "value": ["a", "f" ]} - Name between 'a' & 'f'
+         */
+        btw
+    }
+  </code>
+  
 POST Method: 
 1. <code>http://localhost:8881/persons/json?sort=age&page=0&size=20</code>
    
