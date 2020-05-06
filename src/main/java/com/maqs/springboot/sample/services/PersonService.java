@@ -67,7 +67,7 @@ public class PersonService implements IPersonService {
                 if (! Util.isFieldDefined(Person.class, field) ) {
                     continue;
                 }
-                String o = key.substring(index + 1).toUpperCase();
+                String o = key.substring(index + 1);
                 try {
                     op = SearchCriteria.Operation.valueOf(o);
                 } catch (Exception e) {

@@ -132,7 +132,9 @@ public class Util {
             if (number.contains(",")) {
                 return getCommaSeparatedNumbers(number, cls);
             }
-            return org.apache.commons.lang.math.NumberUtils.createNumber((String) value);
+            if (StringUtils.isNumeric((String) value)) {
+                return org.apache.commons.lang.math.NumberUtils.createNumber((String) value);
+            }
         }
         return null;
     }
